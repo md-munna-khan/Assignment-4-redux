@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 
+
 interface IProps {
   book: IBooks;
 }
@@ -43,9 +44,11 @@ export default function BooksTable({ book }: IProps) {
             </CardFooter>
           </div>
 
-          <Link to="/books">
-            <Button className="w-full">View Books</Button>
-          </Link>
+       <Link to={`/book-details/${book._id}`}>
+       <Button className="w-full">View Books</Button>
+       </Link>
+            
+        
         </Card>
       </div>
     </>
