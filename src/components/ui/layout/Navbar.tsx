@@ -1,13 +1,13 @@
-import React from "react";
+
 import { Link } from "react-router";
 import logo from "./logo.jpg";
 export default function Navbar() {
   return (
-    <div className="flex justify-between my-2">
+    <div className="flex justify-between  my-2">
       <div>
-        <img className="w-50  " src={logo}></img>
+        <img className="w-30  " src={logo}></img>
       </div>
-      <div className="flex gap-4 py-3 shadow-md ">
+      <div className="flex gap-4 py-3 mx-auto  shadow-md ">
         <Link to="/">
           <button className="px-4 py-2 transition">
             Home
@@ -15,7 +15,7 @@ export default function Navbar() {
         </Link>
         <Link to="/books">
           <button className="px-4 py-2 transition">
-            Book
+            All Books
           </button>
         </Link>
         <Link to="/borrow-summary">

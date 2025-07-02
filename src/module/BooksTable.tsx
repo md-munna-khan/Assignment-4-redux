@@ -1,7 +1,6 @@
 import type { IBooks } from "@/types";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -9,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 interface IProps {
   book: IBooks;
@@ -17,29 +17,37 @@ interface IProps {
 export default function BooksTable({ book }: IProps) {
   console.log(book);
 
-  const available = book.available ? "text-green-5000" : "text-red-5000";
+  const available = book.available ? "text-green-500" : "text-red-500";
   return (
-    <div className="  gap-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>{book.title}</CardTitle>
-          <CardDescription>Author:{book.author}</CardDescription>
-          <CardAction>{book.genre}</CardAction>
-        </CardHeader>
-        <CardContent>
-          <p>{book.description}</p>
-        </CardContent>
-        <CardFooter>
-          <p>Copy {book.copies}</p>
-        </CardFooter>
-        <CardFooter>
-          <p className={available}>
-            {book.available ? "Available" : "Not Available"}
-          </p>
-        </CardFooter>
+    <>
+      <div className=" gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>{book.title}</CardTitle>
+            <CardDescription>Author:{book.author}</CardDescription>
+            <CardDescription>Author:{book.genre}</CardDescription>
+          </CardHeader>
 
-        <Button>View Book</Button>
-      </Card>
-    </div>
+          <CardContent>
+            <p>{book.description}</p>
+          </CardContent>
+          <div className="flex justify-between">
+            <CardFooter>
+              <p>Copy : {book.copies}</p>
+            </CardFooter>
+
+            <CardFooter>
+              <p className={available}>
+                {book.available ? "Available" : "Not Available"}
+              </p>
+            </CardFooter>
+          </div>
+
+          <Link to="/books">
+            <Button className="w-full">View Books</Button>
+          </Link>
+        </Card>
+      </div>
+    </>
   );
 }
