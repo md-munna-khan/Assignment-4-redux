@@ -1,4 +1,6 @@
 import App from "@/App";
+import AddBookModal from "@/module/AddBookModal";
+
 import BookDetails from "@/module/BookDetails";
 
 
@@ -29,9 +31,14 @@ import { createBrowserRouter } from "react-router";
                element:<BorrowSummary/>
             },
             {
-               path:'book-details/:id' ,
+               path:'books/:id' ,
                element:<BookDetails/>
-            }
+            },
+            {
+               path:'create-book' ,
+               element:<AddBookModal/>
+            },
+           
         ]
     }
 ])

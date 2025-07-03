@@ -8,49 +8,49 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
-
+import { Link } from "react-router"; 
 
 interface IProps {
   book: IBooks;
 }
 
 export default function BooksTable({ book }: IProps) {
-  console.log(book);
+  const isAvailable = book.available && book.copies > 0;
 
-  const available = book.available ? "text-green-500" : "text-red-500";
   return (
-    <>
-      <div className=" gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>{book.title}</CardTitle>
-            <CardDescription>Author:{book.author}</CardDescription>
-            <CardDescription>Author:{book.genre}</CardDescription>
-          </CardHeader>
+    <div className="w-full">
+      <Card className="flex flex-col justify-between h-full shadow-md transition hover:shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold">{book.title}</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">
+            Author: {book.author}
+          </CardDescription>
+          <CardDescription className="text-sm text-muted-foreground">
+            Genre: {book.genre}
+          </CardDescription>
+        </CardHeader>
 
-          <CardContent>
-            <p>{book.description}</p>
-          </CardContent>
-          <div className="flex justify-between">
-            <CardFooter>
-              <p>Copy : {book.copies}</p>
-            </CardFooter>
+        <CardContent>
+          <p className="text-sm text-gray-700">{book.description}</p>
+        </CardContent>
 
-            <CardFooter>
-              <p className={available}>
-                {book.available ? "Available" : "Not Available"}
-              </p>
-            </CardFooter>
-          </div>
+        <CardFooter className="flex justify-between items-center mt-4">
+          <p className="text-sm text-gray-600">Copies: {book.copies}</p>
+          <span
+            className={`text-sm font-medium px-2 py-1 rounded-full ${
+              isAvailable ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
+            }`}
+          >
+            {isAvailable ? "Available" : "Not Available"}
+          </span>
+        </CardFooter>
 
-       <Link to={`/book-details/${book._id}`}>
-       <Button className="w-full">View Books</Button>
-       </Link>
-            
-        
-        </Card>
-      </div>
-    </>
+        <div className="px-4 pb-4 mt-4">
+          <Link to={`/books/${book._id}`}>
+            <Button className="w-full">📖 View Book</Button>
+          </Link>
+        </div>
+      </Card>
+    </div>
   );
 }
