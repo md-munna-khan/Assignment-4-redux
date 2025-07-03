@@ -1,7 +1,10 @@
 import App from "@/App";
+import ErrorPage from "@/Eroor/ErrorPage";
 import AddBookModal from "@/module/AddBookModal";
 
 import BookDetails from "@/module/BookDetails";
+import BorrowBook from "@/module/borroow/BorrowBook";
+import UpdateBook from "@/module/UpdateBook";
 
 
 
@@ -15,6 +18,7 @@ import { createBrowserRouter } from "react-router";
     {
         path:"/",
         element:<App/>,
+        errorElement:<ErrorPage/>,
         children:[
             {
                
@@ -38,6 +42,14 @@ import { createBrowserRouter } from "react-router";
                path:'create-book' ,
                element:<AddBookModal/>
             },
+            {
+               path:'edit-book/:id' ,
+               element:<UpdateBook/>
+            },
+            {
+               path:'borrow/:id' ,
+               element:<BorrowBook/>
+            }
            
         ]
     }

@@ -21,22 +21,24 @@ export default function AllBooks({ book }: IProps) {
   const [deleteBook, { isLoading }] = useDeleteBookMutation();
 
   const handleDelete = async (id: string) => {
-    const confirmDelete = toast.success("Are you sure you want to delete this book?");
+    const confirmDelete = toast.success(
+      "Are you sure you want to delete this book?"
+    );
     if (!confirmDelete) return;
 
     try {
       await deleteBook(id).unwrap();
       toast.success("🗑️ Book deleted successfully!");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Delete error:", error);
       toast.error("❌ Failed to delete book.");
     }
   };
 
-  const handleBorrow = (id: string) => {
-    console.log("Borrow book with id:", id);
-    // TODO: Add borrow logic here
-  };
+  // const handleBorrow = (id: string) => {
+  //   console.log("Borrow book with id:", id);
+  //   // TODO: Add borrow logic here
+  // };
 
   const available = book.available ? "text-green-500" : "text-red-500";
 
@@ -74,7 +76,7 @@ export default function AllBooks({ book }: IProps) {
           </Link>
 
           {/* Update */}
-          <Link to={`/update-book/${book._id}`}>
+          <Link to={`/edit-book/${book._id}`}>
             <Button className="w-full" variant="secondary">
               <Pencil className="mr-2 h-4 w-4" />
               Update
@@ -93,14 +95,15 @@ export default function AllBooks({ book }: IProps) {
           </Button>
 
           {/* Borrow */}
-          <Button
-            className="w-full"
-            variant="outline"
-            onClick={() => handleBorrow(book._id)}
-            disabled={!book.available}
-          >
-            📚 Borrow
-          </Button>
+          <Link to={`/borrow/${book._id}`}>
+            <Button
+              className="w-full"
+              variant="outline"
+              disabled={!book.available}
+            >
+              📚 Borrow
+            </Button>
+          </Link>
         </div>
       </Card>
     </div>
