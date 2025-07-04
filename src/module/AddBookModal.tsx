@@ -1,4 +1,4 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,14 +13,19 @@ import { useCreateBookMutation } from "@/redux/api/baseApi";
 import type { IBooks } from "@/types";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import Spinner from "@/components/ui/layout/Spinner";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function AddBookModal() {
   type BookData = Omit<IBooks, "_id">;
 
   const navigate = useNavigate()
   const form = useForm<BookData>();
-  const [createBook, { data, isLoading, isError }] = useCreateBookMutation();
+  const [createBook, { data, isLoading }] = useCreateBookMutation();
   console.log(data)
+  if (isLoading){
+    return <Spinner/>
+  }
   
 const handleClick =()=>{
   navigate("/books")
@@ -37,7 +42,7 @@ const handleClick =()=>{
       toast.success("📚 Book added successfully!");
       console.log("Book data:", res);
       form.reset();
-    } catch (error: any) {
+    } catch (error:unknown) {
       console.error("Zod validation error:", error?.data?.error?.issues);
       toast.error("❌ Failed to add book. Please check all required fields.");
     }
@@ -51,6 +56,7 @@ const handleClick =()=>{
     "BIOGRAPHY",
     "FANTASY",
   ];
+    const copies = form.watch("copies");
 
   return (
     <Card className="max-w-xl mx-auto p-4">
@@ -185,27 +191,21 @@ const handleClick =()=>{
             />
 
             {/* Available */}
-            <FormField
-              control={form.control}
+                        <Controller
               name="available"
+              control={form.control}
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex items-center space-x-3">
                   <FormLabel>Available</FormLabel>
-                  <FormControl>
-                    <select
-                      {...field}
-                      className="w-full border rounded p-2"
-                      required
-                    >
-                      <option value="">Select availability</option>
-                      <option value="true">Available</option>
-                      <option value="false">Not Available</option>
-                    </select>
-                  </FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    disabled={Number(copies) === 0}
+                    onCheckedChange={(checked) => field.onChange(!!checked)}
+                    className="border border-gray-300"
+                  />
                 </FormItem>
               )}
             />
-
             {/* Submit Button */}
             <Button onClick= {()=>handleClick()}  type="submit" className="w-full text-lg">
               

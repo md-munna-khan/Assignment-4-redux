@@ -1,5 +1,6 @@
 
 
+import Spinner from '@/components/ui/layout/Spinner'
 import BooksTable from '@/module/BooksTable'
 
 import { useGetBookQuery } from '@/redux/api/baseApi'
@@ -7,11 +8,12 @@ import type { IBooks } from '@/types'
 
 import { Link } from 'react-router'
 
+
 export default function Home() {
    const { data, isError, isLoading } = useGetBookQuery(undefined)
      console.log({ data, isLoading, isError })
      if(isLoading){
-      return <h1>loading...</h1>
+      return <Spinner/>
      }
      const firstEightData = data?.data?.slice(0,8)
   return (

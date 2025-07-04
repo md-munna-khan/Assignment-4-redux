@@ -1,5 +1,6 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import Spinner from "@/components/ui/layout/Spinner";
 import { useGetBorrowQuery } from "@/redux/api/BorrowApi.";
 interface IBorrowSummaryItem {
   book: {
@@ -13,7 +14,7 @@ interface IBorrowSummaryItem {
 export default function BorrowSummary() {
   const { data, isLoading, isError } = useGetBorrowQuery(undefined);
 
-  if (isLoading) return <p className="text-center">Loading borrow summary...</p>;
+  if (isLoading) return <p className="text-center"><Spinner/></p>;
   if (isError || !data?.data) return <p className="text-center text-red-500">Failed to load summary.</p>;
 
   return (

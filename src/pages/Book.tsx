@@ -1,14 +1,17 @@
+
+import Spinner from '@/components/ui/layout/Spinner'
 import AllBooks from '@/module/AllBooks'
 
 import { useGetBookQuery } from '@/redux/api/baseApi'
 import type { IBooks } from '@/types'
+import { RingLoader } from 'react-spinners'
 
 
 export default function Book() {
   const { data, isError, isLoading } = useGetBookQuery(undefined)
    console.log({ data, isLoading, isError })
    if(isLoading){
-    return <h1>loading...</h1>
+    return <Spinner/>
    }
   return (
     <div className='my-8'>

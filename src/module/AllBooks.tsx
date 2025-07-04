@@ -11,6 +11,8 @@ import type { IBooks } from "@/types";
 import { Link } from "react-router";
 import { useDeleteBookMutation } from "@/redux/api/baseApi";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
+
 import { BookOpen, Pencil, Trash2 } from "lucide-react"; // icons import
 
 interface IProps {
@@ -20,25 +22,43 @@ interface IProps {
 export default function AllBooks({ book }: IProps) {
   const [deleteBook, { isLoading }] = useDeleteBookMutation();
 
-  const handleDelete = async (id: string) => {
-    const confirmDelete = toast.success(
-      "Are you sure you want to delete this book?"
-    );
-    if (!confirmDelete) return;
+  // const handleDelete = async (id: string) => {
+  //   const confirmDelete = toast.success(
+  //     "Are you sure you want to delete this book?"
+  //   );
+  //   if (!confirmDelete) return;
 
+  //   try {
+  //     await deleteBook(id).unwrap();
+  //     toast.success("🗑️ Book deleted successfully!");
+  //   } catch (error: unknown) {
+  //     console.error("Delete error:", error);
+  //     toast.error("❌ Failed to delete book.");
+  //   }
+  // };
+
+const handleDelete = async (id: string) => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "This action will permanently delete the book!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+  });
+
+  if (result.isConfirmed) {
     try {
       await deleteBook(id).unwrap();
-      toast.success("🗑️ Book deleted successfully!");
+      Swal.fire("Deleted!", "Book has been deleted.", "success");
     } catch (error: unknown) {
       console.error("Delete error:", error);
-      toast.error("❌ Failed to delete book.");
+      Swal.fire("Error!", "Failed to delete book.", "error");
     }
-  };
+  }
+};
 
-  // const handleBorrow = (id: string) => {
-  //   console.log("Borrow book with id:", id);
-  //   // TODO: Add borrow logic here
-  // };
 
   const available = book.available ? "text-green-500" : "text-red-500";
 

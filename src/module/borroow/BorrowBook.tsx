@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useGetBookQuery, } from "@/redux/api/baseApi";
 import { useBorrowBookMutation } from "@/redux/api/BorrowApi.";
 import type { IBooks } from "@/types";
+import Spinner from "@/components/ui/layout/Spinner";
 
 type BorrowFormData = {
   quantity: number;
@@ -58,7 +59,7 @@ export default function BorrowBook() {
 }
   }
 
-  if (!book) return <p>Loading book data...</p>;
+  if (!book) return <Spinner/>;
 
   return (
     <Card className="max-w-md mx-auto p-4 mt-10">

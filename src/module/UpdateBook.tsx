@@ -1,4 +1,4 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,24 +9,26 @@ import {
   FormControl,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {  useGetBookQuery, useUpdateBookMutation } from "@/redux/api/baseApi";
+import { useGetBookQuery, useUpdateBookMutation } from "@/redux/api/baseApi";
 import type { IBooks } from "@/types";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router";
 import React from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import Spinner from "@/components/ui/layout/Spinner";
 
 export default function UpdateBook() {
-  const {id}=useParams()
- 
+  const { id } = useParams<{ id: string }>();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const form = useForm<Omit<IBooks, "_id">>();
-   const { data: bookData, isLoading } = useGetBookQuery(undefined);
-   const currentBook = bookData?.data?.find((book:IBooks)=>book._id ===id);
-  const [updateBook, { data, isLoading:updating  }] = useUpdateBookMutation();
-  console.log(data)
-  
- //  Prefill form with current book data
+  const { data: bookData, isLoading } = useGetBookQuery(undefined);
+  const currentBook = bookData?.data?.find((book: IBooks) => book._id === id);
+  const [updateBook, { data, isLoading: updating }] = useUpdateBookMutation();
+  console.log(data);
+  // 🔁 Watch copies field
+
+  //  Prefill form with current book data
   React.useEffect(() => {
     if (currentBook) {
       form.reset({
@@ -43,12 +45,12 @@ export default function UpdateBook() {
 
   // ✅ Submit handler
   const onSubmit: SubmitHandler<Omit<IBooks, "_id">> = async (formData) => {
-    console.log(formData)
+    console.log(formData);
     try {
-      await updateBook({ id, data: formData }).unwrap();
+      await updateBook({ id: id as string, data: formData }).unwrap();
       toast.success("✅ Book updated successfully!");
       navigate("/books"); // redirect to home or book list
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("❌ Failed to update book");
       console.log(error);
     }
@@ -63,12 +65,20 @@ export default function UpdateBook() {
     "FANTASY",
   ];
 
-  if (isLoading) return <p>Loading book...</p>;
+  if (isLoading)
+    return (
+      <p>
+        <Spinner />
+      </p>
+    );
+  const copies = form.watch("copies");
 
   return (
     <Card className="max-w-xl mx-auto p-4">
       <CardHeader>
-        <CardTitle className="text-2xl font-semibold text-center">📚 Update Book</CardTitle>
+        <CardTitle className="text-2xl font-semibold text-center">
+          📚 Update Book
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -95,7 +105,11 @@ export default function UpdateBook() {
                 <FormItem>
                   <FormLabel>Author</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter author name" {...field} required />
+                    <Input
+                      placeholder="Enter author name"
+                      {...field}
+                      required
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -109,7 +123,11 @@ export default function UpdateBook() {
                 <FormItem>
                   <FormLabel>Genre</FormLabel>
                   <FormControl>
-                    <select {...field} className="w-full border rounded p-2" required>
+                    <select
+                      {...field}
+                      className="w-full border rounded p-2"
+                      required
+                    >
                       <option value="">Select genre</option>
                       {genres.map((g) => (
                         <option key={g} value={g}>
@@ -130,7 +148,11 @@ export default function UpdateBook() {
                 <FormItem>
                   <FormLabel>ISBN</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter ISBN number" {...field} required />
+                    <Input
+                      placeholder="Enter ISBN number"
+                      {...field}
+                      required
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -144,7 +166,11 @@ export default function UpdateBook() {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="Short book description" {...field} required />
+                    <Input
+                      placeholder="Short book description"
+                      {...field}
+                      required
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -165,24 +191,27 @@ export default function UpdateBook() {
             />
 
             {/* Available */}
-            <FormField
-              control={form.control}
+            <Controller
               name="available"
+              control={form.control}
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex items-center space-x-3">
                   <FormLabel>Available</FormLabel>
-                  <FormControl>
-                    <select {...field} className="w-full border rounded p-2" required>
-                      <option value="">Select availability</option>
-                      <option value="true">Available</option>
-                      <option value="false">Not Available</option>
-                    </select>
-                  </FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    disabled={Number(copies) === 0}
+                    onCheckedChange={(checked) => field.onChange(!!checked)}
+                    className="border border-gray-300"
+                  />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full text-lg" disabled={updating}>
+            <Button
+              type="submit"
+              className="w-full text-lg"
+              disabled={updating}
+            >
               Update Book
             </Button>
           </form>

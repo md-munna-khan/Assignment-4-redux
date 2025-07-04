@@ -12,13 +12,14 @@ import {
 } from "@/components/ui/card";
 import { Trash2, Pencil, BookOpen, ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
+import Spinner from "@/components/ui/layout/Spinner";
 
 export default function BookDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetBookQuery(undefined);
 
-  if (isLoading) return <p className="text-center mt-10">Loading...</p>;
+  if (isLoading) return <Spinner/>
   if (isError) return <p className="text-center mt-10 text-red-500">Something went wrong.</p>;
 
   const book: IBooks | undefined = data?.data?.find((book:IBooks) => book._id === id);
