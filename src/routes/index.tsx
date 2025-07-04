@@ -47,7 +47,7 @@ import { createBrowserRouter } from "react-router";
                element:<UpdateBook/>
             },
             {
-               path:'borrow/:id' ,
+               path:'borrow/:bookId' ,
                element:<BorrowBook/>
             }
            

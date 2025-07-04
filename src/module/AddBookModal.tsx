@@ -42,10 +42,10 @@ const handleClick =()=>{
       toast.success("📚 Book added successfully!");
       console.log("Book data:", res);
       form.reset();
-    } catch (error:unknown) {
-      console.error("Zod validation error:", error?.data?.error?.issues);
-      toast.error("❌ Failed to add book. Please check all required fields.");
-    }
+    }catch (error: unknown) {
+  console.error("Error:", error);
+  toast.error("❌ Something went wrong.");
+}
   };
 
   const genres: IBooks["genre"][] = [

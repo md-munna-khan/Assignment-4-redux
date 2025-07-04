@@ -4,7 +4,7 @@ import AllBooks from '@/module/AllBooks'
 
 import { useGetBookQuery } from '@/redux/api/baseApi'
 import type { IBooks } from '@/types'
-import { RingLoader } from 'react-spinners'
+
 
 
 export default function Book() {

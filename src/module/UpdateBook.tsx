@@ -41,11 +41,20 @@ export default function UpdateBook() {
         available: currentBook.available,
       });
     }
-  }, [currentBook, form.reset]);
+  }, [currentBook, form, form.reset]);
+
+  // [currentBook, form.reset]);
 
   // ✅ Submit handler
   const onSubmit: SubmitHandler<Omit<IBooks, "_id">> = async (formData) => {
     console.log(formData);
+
+    if (formData.copies < 1) {
+      formData.available = false;
+    } else {
+      formData.available = true;
+    }
+
     try {
       await updateBook({ id: id as string, data: formData }).unwrap();
       toast.success("✅ Book updated successfully!");
@@ -184,7 +193,7 @@ export default function UpdateBook() {
                 <FormItem>
                   <FormLabel>Copies</FormLabel>
                   <FormControl>
-                    <Input type="number" min={1} {...field} required />
+                    <Input type="number" min={0} {...field} required />
                   </FormControl>
                 </FormItem>
               )}

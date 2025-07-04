@@ -16,6 +16,8 @@ interface IProps {
 
 export default function BooksTable({ book }: IProps) {
   const isAvailable = book.available && book.copies > 0;
+ 
+
 
   return (
     <div className="w-full">

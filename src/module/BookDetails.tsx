@@ -10,7 +10,7 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
-import { Trash2, Pencil, BookOpen, ArrowLeft } from "lucide-react";
+import { BookOpen, ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import Spinner from "@/components/ui/layout/Spinner";
 
@@ -26,7 +26,7 @@ export default function BookDetails() {
   if (!book) return <p className="text-center mt-10 text-red-500">Book not found</p>;
 
   return (
-    <div className="flex justify-center p-6">
+    <div className="flex justify-center text-center p-6">
       <Card className="w-full max-w-2xl shadow-lg">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">{book.title}</CardTitle>
@@ -46,18 +46,12 @@ export default function BookDetails() {
           <p className="pt-2">{book.description}</p>
         </CardContent>
 
-        <CardFooter className="flex flex-wrap gap-3 pt-6">
-          <Button variant="destructive" className="gap-2">
-            <Trash2 size={16} />
-            Delete
-          </Button>
+        <CardFooter className="flex mx-auto flex-wrap gap-3 pt-6">
+        
 
-          <Button variant="secondary" className="gap-2">
-            <Pencil size={16} />
-            Update
-          </Button>
+       
 
-          <Button className="gap-2 bg-blue-600 hover:bg-blue-700">
+          <Button className="gap-2  bg-blue-600 hover:bg-blue-700">
             <BookOpen size={16} />
             Borrow
           </Button>

@@ -4,8 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { useGetBookQuery, } from "@/redux/api/baseApi";
-import { useBorrowBookMutation } from "@/redux/api/BorrowApi.";
+import { useBorrowBookMutation, useGetBookQuery } from "@/redux/api/baseApi";
+// import { useBorrowBookMutation } from "@/redux/api/BorrowApi.";
 import type { IBooks } from "@/types";
 import Spinner from "@/components/ui/layout/Spinner";
 
@@ -15,7 +15,8 @@ type BorrowFormData = {
 };
 
 export default function BorrowBook() {
-  const { id } = useParams();
+  const { bookId: id } = useParams();
+
   const navigate = useNavigate();
 
   const { data: booksData } = useGetBookQuery(undefined);
@@ -32,12 +33,11 @@ export default function BorrowBook() {
     }
 
     try {
-     const borrowData = {
-  book: id, // ✅ this must match the Zod schema!
-  quantity: Number(formData.quantity), // just to be safe
-  dueDate: formData.dueDate.toString(), // ensure it's a string
-};
-
+      const borrowData = {
+        book: id, // ✅ this must match the Zod schema!
+        quantity: Number(formData.quantity), // just to be safe
+        dueDate: formData.dueDate.toString(), // ensure it's a string
+      };
 
       await borrowBook(borrowData).unwrap();
       toast.success("✅ Book borrowed successfully!");
@@ -49,17 +49,17 @@ export default function BorrowBook() {
 
       navigate("/borrow-summary"); // ⬅️ redirect
     } catch (err: unknown) {
-  let message = "❌ Failed to borrow book.";
+      let message = "❌ Failed to borrow book.";
 
-  if (err instanceof Error) {
-    message = `❌ ${err.message}`;
-  }
+      if (err instanceof Error) {
+        message = `❌ ${err.message}`;
+      }
 
-  toast.error(message); // ✅ Now it's a string
-}
-  }
+      toast.error(message); // ✅ Now it's a string
+    }
+  };
 
-  if (!book) return <Spinner/>;
+  if (!book) return <Spinner />;
 
   return (
     <Card className="max-w-md mx-auto p-4 mt-10">
@@ -81,10 +81,12 @@ export default function BorrowBook() {
           </div>
 
           {/* Due Date */}
+          {/* Due Date */}
           <div>
             <label className="block font-medium">Due Date</label>
             <Input
               type="date"
+              min={new Date().toISOString().split("T")[0]}
               {...form.register("dueDate", { required: true })}
             />
           </div>
