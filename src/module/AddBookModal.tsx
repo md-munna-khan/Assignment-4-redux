@@ -7,6 +7,7 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCreateBookMutation } from "@/redux/api/baseApi";
@@ -19,33 +20,37 @@ import { Checkbox } from "@/components/ui/checkbox";
 export default function AddBookModal() {
   type BookData = Omit<IBooks, "_id">;
 
-  const navigate = useNavigate()
-  const form = useForm<BookData>();
-  const [createBook, { data, isLoading }] = useCreateBookMutation();
-  console.log(data)
-  if (isLoading){
-    return <Spinner/>
+  const navigate = useNavigate();
+
+  // ✅ React Hook Form with validation mode
+  const form = useForm<BookData>({
+    mode: "onChange",
+  });
+
+  const { isValid } = form.formState;
+
+  const [createBook, { isLoading }] = useCreateBookMutation();
+
+  if (isLoading) {
+    return <Spinner />;
   }
-  
-const handleClick =()=>{
-  navigate("/books")
-}
+
   const onSubmit: SubmitHandler<BookData> = async (formData) => {
     const payload = {
       ...formData,
       copies: Number(formData.copies),
-      available: formData.available === true ,
+      available: formData.available === true,
     };
 
     try {
       const res = await createBook(payload).unwrap();
-      toast.success("📚 Book added successfully!");
-      console.log("Book data:", res);
+      toast.success("📚 Book added successfully!", res);
       form.reset();
-    }catch (error: unknown) {
-  console.error("Error:", error);
-  toast.error("❌ Something went wrong.");
-}
+      navigate("/books");
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("❌ Something went wrong.");
+    }
   };
 
   const genres: IBooks["genre"][] = [
@@ -56,7 +61,8 @@ const handleClick =()=>{
     "BIOGRAPHY",
     "FANTASY",
   ];
-    const copies = form.watch("copies");
+
+  const copies = form.watch("copies");
 
   return (
     <Card className="max-w-xl mx-auto p-4">
@@ -72,17 +78,14 @@ const handleClick =()=>{
             <FormField
               control={form.control}
               name="title"
+              rules={{ required: "Title is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter book title"
-                      {...field}
-                      value={field.value || ""}
-                      required
-                    />
+                    <Input placeholder="Enter book title" {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -91,17 +94,14 @@ const handleClick =()=>{
             <FormField
               control={form.control}
               name="author"
+              rules={{ required: "Author is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Author</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter author name"
-                      {...field}
-                      value={field.value || ""}
-                      required
-                    />
+                    <Input placeholder="Enter author name" {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -110,15 +110,12 @@ const handleClick =()=>{
             <FormField
               control={form.control}
               name="genre"
+              rules={{ required: "Genre is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Genre</FormLabel>
                   <FormControl>
-                    <select
-                      {...field}
-                      className="w-full border rounded p-2"
-                      required
-                    >
+                    <select {...field} className="w-full border rounded p-2">
                       <option value="">Select genre</option>
                       {genres.map((g) => (
                         <option key={g} value={g}>
@@ -127,6 +124,7 @@ const handleClick =()=>{
                       ))}
                     </select>
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -135,17 +133,14 @@ const handleClick =()=>{
             <FormField
               control={form.control}
               name="isbn"
+              rules={{ required: "ISBN is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>ISBN</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter ISBN number"
-                      {...field}
-                      value={field.value || ""}
-                      required
-                    />
+                    <Input placeholder="Enter ISBN number" {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -158,13 +153,9 @@ const handleClick =()=>{
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Short book description"
-                      {...field}
-                      value={field.value || ""}
-                      required
-                    />
+                    <Input placeholder="Short book description" {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -173,6 +164,7 @@ const handleClick =()=>{
             <FormField
               control={form.control}
               name="copies"
+              rules={{ required: "Copies are required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Copies</FormLabel>
@@ -181,19 +173,19 @@ const handleClick =()=>{
                       type="number"
                       placeholder="Number of copies"
                       {...field}
-                      value={field.value || ""}
-                      required
                       min={1}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
 
             {/* Available */}
-                        <Controller
+            <Controller
               name="available"
               control={form.control}
+              defaultValue={true}
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-3">
                   <FormLabel>Available</FormLabel>
@@ -206,10 +198,14 @@ const handleClick =()=>{
                 </FormItem>
               )}
             />
+
             {/* Submit Button */}
-            <Button onClick= {()=>handleClick()}  type="submit" className="w-full text-lg">
-              
-              ➕ Add Book
+            <Button
+              type="submit"
+              disabled={!isValid || isLoading}
+              className="w-full text-lg"
+            >
+              {isLoading ? "⏳ Adding..." : "➕ Add Book"}
             </Button>
           </form>
         </Form>
