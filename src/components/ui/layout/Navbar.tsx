@@ -1,14 +1,14 @@
 
 import { useState } from "react";
-import { Link } from "react-router"; // Use react-router-dom
+import { Link } from "react-router"; 
 import logo from "./logo.jpg";
-import { Menu, X } from "lucide-react"; // for hamburger & close icon
+import { Menu, X } from "lucide-react"; 
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-sm px-6 py-3">
+    <nav className="bg-white shadow-sm px-6 py-3 my-8">
       <div className="flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center gap-2">
