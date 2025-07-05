@@ -1,70 +1,130 @@
-# React + TypeScript + Vite
+# 📚 Minimal Library Management System – B5A4
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A clean and minimal **Library Management System** built with **React**, **Redux Toolkit Query**, and **TypeScript**. This project allows users to view, add, edit, delete, and borrow books, with a simple UI and solid API integration.
 
-Currently, two official plugins are available:
+>  Developed for Apollo Level-2 Web Development Assignment – B5A4
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🌐 Live Site
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+🔗 [Frontend Live Link](https://redux-assignment-4-munna.vercel.app/books)  
+🔗 [Backend Live Link (if any)](https://redux-assignemnt-4-backend.vercel.app/)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+##  Project Overview
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+This is a **client-side** application that performs full **CRUD operations** on books and allows users to borrow books. The app is built using **React + TypeScript + Redux Toolkit Query** and connects to a **RESTful API backend** (MongoDB + Express.js).
+
+---
+
+##  Features
+
+###  Public Routes
+
+All pages are accessible without login or authentication.
+
+### 📚 Book Management
+
+- **Book List Table**
+  - Columns: `Title`, `Author`, `Genre`, `ISBN`, `Copies`, `Availability`, and `Actions`
+  - Sortable, responsive layout
+
+- **Action Buttons:**
+  -  Edit Book (opens pre-filled form)
+  -  Delete Book (with confirmation modal)
+  -  Borrow Book (form with quantity & due date)
+
+- **Add New Book**
+  - Fields: Title, Author, Genre, ISBN, Description, Copies
+  - Defaults `available = true`
+
+### 📖 Borrow Book
+
+- Opens form with:
+  - `Quantity` (max = copies)
+  - `Due Date` (date)
+- Submits via API and updates UI
+- Marks book as unavailable if `copies === 0`
+
+###  Borrow Summary
+
+- Aggregated summary of borrowed books
+- Columns: `Book Title`, `ISBN`, `Total Quantity Borrowed`
+- Uses aggregation API endpoint
+
+---
+
+##  Page Routes
+
+| Route | Description |
+|-------|-------------|
+| `/books` | All books with view, edit, delete, and borrow options |
+| `/create-book` | Add new book form |
+| `/books/:id` | View details of a specific book |
+| `/edit-book/:id` | Edit book info |
+| `/borrow/:bookId` | Borrow form |
+| `/borrow-summary` | Summary of all borrowed books |
+
+---
+
+##  UI/UX
+
+- ✅ Minimalist & clean design using Tailwind CSS
+- ✅ SweetAlert2 for confirmation modals
+- ✅ Fully responsive across devices
+- ✅ Easy navigation and consistent layout
+
+---
+
+##  Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | React + TypeScript |
+| Styling | Tailwind CSS |
+| State Management | Redux Toolkit + RTK Query |
+| API Integration | REST API |
+| Backend (Optional) | Node.js + Express.js |
+| Database | MongoDB + Mongoose |
+
+---
+
+##  Bonus Features Implemented
+
+| Feature |  Status |
+|--------|-----------|
+| Optimistic UI Updates |  |
+| Toast Notifications |  Using SweetAlert2 |
+| Responsive Layout |  
+| Type-Safe Forms | 
+
+---
+
+##  Backend Overview (If Included)
+
+- **Database Collections:**
+  - `Books`: title, author, genre, isbn, description, copies, available
+  - `Borrows`: bookId, quantity, dueDate
+
+- **APIs:**
+  - `GET /books` – fetch all books
+  - `POST /books` – add a book
+  - `PATCH /books/:id` – update a book
+  - `DELETE /books/:id` – delete a book
+  - `POST /borrow` – borrow a book
+  - `GET /borrow-summary` – borrow summary (aggregation)
+
+---
+
+##  Installation
+
+1. Clone the repo:
+   ```bash
+    FrontEnd
+ https://github.com/md-munna-khan/Assignment-4-redux
+
+  Backend
+https://github.com/md-munna-khan/B5-A4-Backend
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-# Assignment-4-redux

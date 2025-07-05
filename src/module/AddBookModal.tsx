@@ -1,4 +1,4 @@
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import {  useForm, type SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,6 +36,11 @@ export default function AddBookModal() {
   }
 
   const onSubmit: SubmitHandler<BookData> = async (formData) => {
+  if (formData.copies === 0) {
+        formData.available = false;
+      } else {
+        formData.available = true;
+      }
     const payload = {
       ...formData,
       copies: Number(formData.copies),
@@ -44,6 +49,9 @@ export default function AddBookModal() {
 
     try {
       const res = await createBook(payload).unwrap();
+    
+
+     
       toast.success("📚 Book added successfully!", res);
       form.reset();
       navigate("/books");
@@ -164,16 +172,20 @@ export default function AddBookModal() {
             <FormField
               control={form.control}
               name="copies"
-              rules={{ required: "Copies are required" }}
+              rules={{
+                required: "Copies is required",
+                min: { value: 0, message: "Copies can nOt Be Negative" },
+              }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Copies</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Number of copies"
-                      {...field}
-                      min={1}
+                      min={0}
+                      placeholder="0"
+                      value={field.value ?? ""}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
                   <FormMessage />
@@ -182,19 +194,21 @@ export default function AddBookModal() {
             />
 
             {/* Available */}
-            <Controller
-              name="available"
+            <FormField
               control={form.control}
-              defaultValue={true}
+              name="available"
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-3">
-                  <FormLabel>Available</FormLabel>
-                  <Checkbox
-                    checked={field.value}
-                    disabled={Number(copies) === 0}
-                    onCheckedChange={(checked) => field.onChange(!!checked)}
-                    className="border border-gray-300"
-                  />
+                  <FormControl>
+                    <Checkbox
+                      className="ml-1"
+                      checked={copies > 0 ? true : field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="text-sm font-medium leading-none">
+                    Available
+                  </FormLabel>
                 </FormItem>
               )}
             />
