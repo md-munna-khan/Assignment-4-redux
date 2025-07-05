@@ -178,7 +178,7 @@ export default function UpdateBook() {
                     <Input
                       placeholder="Short book description"
                       {...field}
-                      required
+                   
                     />
                   </FormControl>
                 </FormItem>
